@@ -1,8 +1,20 @@
 # users/serializers.py
 from rest_framework import serializers
-from .models import User
+from .models import User, Materia
+
+# Serializador para el modelo Materia
+class MateriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Materia
+        fields = ['id', 'nombre']
 
 class UserSerializer(serializers.ModelSerializer):
+    materias = serializers.PrimaryKeyRelatedField(
+        queryset=Materia.objects.all(), 
+        many=True, 
+        write_only=True,
+        required=False # Hacemos que no sea estrictamente requerido para admins y alumnos
+    )
     class Meta:
         model = User
         # Campos que se enviarán/recibirán. La contraseña no se debe devolver.
@@ -10,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'username', 'email', 'first_name', 'last_name', 
             'password', 'rol', 'telefono', 'fecha_nacimiento', 'edad',
             'clave_admin', 'rfc', 'ocupacion', 'matricula', 'curp',
-            'n_empleado', 'cubiculo', 'area_investigacion'
+            'n_empleado', 'cubiculo', 'area_investigacion', 'materias'
         ]
         # Configuración extra para campos específicos
         extra_kwargs = {
@@ -18,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        materias_data = validated_data.pop('materias', None)
         """
         Este método se llama cuando se crea un nuevo usuario.
         Encripta la contraseña antes de guardarla.
@@ -34,4 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         # Guarda el nuevo usuario en la base de datos
         instance.save()
+        if materias_data:
+            instance.materias.set(materias_data)
+
         return instance

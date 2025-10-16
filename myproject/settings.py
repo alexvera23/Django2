@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'users',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
 
 
 ]
@@ -132,3 +133,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200", # El origen de tu app de Angular
 ]
 CORS_ALLOW_ALL_ORIGINS = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}

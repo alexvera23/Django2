@@ -1,8 +1,10 @@
 # users/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from .serializers import UserSerializer
+from rest_framework import status, generics
+from .serializers import UserSerializer, MateriaSerializer
+from .models import Materia #importar el modelo Materia
+
 
 class RegisterView(APIView):
     """
@@ -21,3 +23,10 @@ class RegisterView(APIView):
 
         # Si los datos no son válidos, devolvemos los errores
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class MateriaListView(generics.ListCreateAPIView):
+    """
+    Vista para listar todas las materias o crear una nueva materia.
+    """
+    queryset = Materia.objects.all()
+    serializer_class = MateriaSerializer

@@ -2,6 +2,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+class Materia(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nombre
+
 class User(AbstractUser):
     """
     Modelo de Usuario personalizado que extiende el de Django.
@@ -14,6 +20,7 @@ class User(AbstractUser):
         ADMINISTRADOR = 'administrador', 'Administrador'
         MAESTRO = 'maestro', 'Maestro'
         ALUMNO = 'alumno', 'Alumno'
+
 
     rol = models.CharField(
         max_length=15,
@@ -43,6 +50,8 @@ class User(AbstractUser):
     cubiculo = models.CharField(max_length=50, blank=True, null=True)
     area_investigacion = models.CharField(max_length=100, blank=True, null=True)
     # El campo de materias lo manejaremos después con una relación a otro modelo
+    materias = models.ManyToManyField(Materia, blank=True)
+
 
     def __str__(self):
         return self.get_full_name() if self.get_full_name() else self.username

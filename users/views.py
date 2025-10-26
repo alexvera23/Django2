@@ -4,12 +4,14 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from .serializers import UserSerializer, MateriaSerializer
 from .models import Materia #importar el modelo Materia
+from rest_framework.permissions import AllowAny # Permite cargar las materias sin necesidad del token :)
 
 
 class RegisterView(APIView):
     """
     Vista para registrar un nuevo usuario en el sistema.
     """
+    permission_classes = [AllowAny]  # Permite el acceso sin autenticación
     def post(self, request):
         # Tomamos los datos que llegan en la petición (el JSON del frontend)
         serializer = UserSerializer(data=request.data)
@@ -30,3 +32,4 @@ class MateriaListView(generics.ListCreateAPIView):
     """
     queryset = Materia.objects.all()
     serializer_class = MateriaSerializer
+    permission_classes = [AllowAny]  # Permite el acceso sin autenticación

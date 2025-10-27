@@ -1,6 +1,7 @@
 # users/serializers.py
 from rest_framework import serializers
 from .models import User, Materia
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 # Serializador para el modelo Materia
 class MateriaSerializer(serializers.ModelSerializer):
@@ -51,3 +52,19 @@ class UserSerializer(serializers.ModelSerializer):
             instance.materias.set(materias_data)
 
         return instance
+    
+
+# Serializador personalizado para JWT que incluye el rol del usuario
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        # Llama al método original para obtener el token base
+        token = super().get_token(user)
+
+        # --- Añade tus campos personalizados al "payload" del token ---
+        # Estos datos estarán encriptados dentro del token
+        token['username'] = user.username
+        token['rol'] = user.rol 
+        # Puedes añadir más campos si lo necesitas, como 'first_name'
+
+        return token

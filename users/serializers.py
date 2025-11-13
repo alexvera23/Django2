@@ -10,6 +10,7 @@ class MateriaSerializer(serializers.ModelSerializer):
         fields = ['id', 'nombre']
 
 class UserSerializer(serializers.ModelSerializer):
+    materias_info = MateriaSerializer(source='materias', many=True, read_only=True)
     materias = serializers.PrimaryKeyRelatedField(
         queryset=Materia.objects.all(), 
         many=True, 
@@ -23,12 +24,13 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'username', 'email', 'first_name', 'last_name', 
             'password', 'rol', 'telefono', 'fecha_nacimiento', 'edad',
             'clave_admin', 'rfc', 'ocupacion', 'matricula', 'curp',
-            'n_empleado', 'cubiculo', 'area_investigacion', 'materias'
+            'n_empleado', 'cubiculo', 'area_investigacion', 'materias', 'materias_info'
         ]
         # Configuración extra para campos específicos
         extra_kwargs = {
             'password': {'write_only': True} # 'write_only' significa que solo se usa para crear/actualizar, no para mostrar
         }
+        read_only_fields = ['id', 'materias_info', 'edad']
 
     def create(self, validated_data):
         materias_data = validated_data.pop('materias', None)
@@ -65,6 +67,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Estos datos estarán encriptados dentro del token
         token['username'] = user.username
         token['rol'] = user.rol 
-        # Puedes añadir más campos si lo necesitas, como 'first_name'
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+       
+            
 
         return token

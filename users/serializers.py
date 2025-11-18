@@ -15,8 +15,9 @@ class UserSerializer(serializers.ModelSerializer):
         queryset=Materia.objects.all(), 
         many=True, 
         write_only=True,
-        required=False # Hacemos que no sea estrictamente requerido para admins y alumnos
+        required=False
     )
+    
     class Meta:
         model = User
         
@@ -28,56 +29,61 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         
         extra_kwargs = {
-            'password': {'write_only': True, 'required': False}, 
+            'password': {'write_only': True, 'required': False},
         }
         read_only_fields = ['id', 'materias_info', 'edad']
 
     def create(self, validated_data):
         materias_data = validated_data.pop('materias', None)
-        """
-        Este método se llama cuando se crea un nuevo usuario.
-        Encripta la contraseña antes de guardarla.
-        """
-        
         password = validated_data.pop('password', None)
-
-       
+        
         instance = self.Meta.model(**validated_data)
-
-        # Si se proporcionó una contraseña, la encripta
+        
         if password is not None:
-            instance.set_password(password) 
-
-        # Guarda el nuevo usuario en la base de datos
+            instance.set_password(password)
+        
         instance.save()
+        
         if materias_data:
             instance.materias.set(materias_data)
-
+        
         return instance
     
     def update(self, instance, validated_data):
+        """
+        Actualiza un usuario existente.
+        Si se proporciona una contraseña, la encripta antes de guardar.
+        """
+        # Extraer campos especiales
         password = validated_data.pop('password', None)
-        instance = super().update(instance, validated_data)
+        materias_data = validated_data.pop('materias', None)
+        
+        # Actualizar campos básicos
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        # Si hay una nueva contraseña, encriptarla
         if password:
             instance.set_password(password)
-            instance.save()
+        
+        # Guardar los cambios
+        instance.save()
+        
+        # Actualizar materias si se proporcionaron
+        if materias_data is not None:
+            instance.materias.set(materias_data)
+        
         return instance
-    
 
 # Serializador personalizado para JWT que incluye el rol del usuario
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
-        
         token = super().get_token(user)
-
-        # Puedo añadir los campos que quiera al token 
         
         token['username'] = user.username
         token['rol'] = user.rol 
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
-       
-            
-
+        
         return token

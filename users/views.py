@@ -62,3 +62,11 @@ class AlumnosListView(generics.ListAPIView):
     queryset = User.objects.filter(rol=User.Rol.ALUMNO).order_by('last_name')
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+
+
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Vista para obtener, actualizar o eliminar un usuario específico. :=)"""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    

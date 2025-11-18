@@ -28,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         
         extra_kwargs = {
-            'password': {'write_only': True} 
+            'password': {'write_only': True, 'required': False}, 
         }
         read_only_fields = ['id', 'materias_info', 'edad']
 
@@ -53,6 +53,14 @@ class UserSerializer(serializers.ModelSerializer):
         if materias_data:
             instance.materias.set(materias_data)
 
+        return instance
+    
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        instance = super().update(instance, validated_data)
+        if password:
+            instance.set_password(password)
+            instance.save()
         return instance
     
 

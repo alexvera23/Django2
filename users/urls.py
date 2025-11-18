@@ -5,6 +5,7 @@ from .views import(RegisterView,
                    AdminUserListView,
                    AdministradoresListView,
                    MaestrosListView,
+                   UserDetailView,
                    AlumnosListView) 
 
 
@@ -16,4 +17,5 @@ urlpatterns = [
     path('users/administradores/', AdministradoresListView.as_view(), name='user-list-admins'),
     path('users/maestros/', MaestrosListView.as_view(), name='user-list-maestros'),
     path('users/alumnos/', AlumnosListView.as_view(), name='user-list-alumnos'),
+    path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
 ]

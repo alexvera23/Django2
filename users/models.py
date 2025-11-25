@@ -9,11 +9,7 @@ class Materia(models.Model):
         return self.nombre
 
 class User(AbstractUser):
-    """
-    Modelo de Usuario personalizado que extiende el de Django.
-    Incluye un campo 'rol' para diferenciar entre tipos de usuarios y
-    campos específicos para cada rol.
-    """
+   
 
    #Tenmos que definir los roles de usuario
     class Rol(models.TextChoices):

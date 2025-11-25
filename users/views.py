@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class RegisterView(APIView):
     """
-    Vista para registrar un nuevo usuario en el sistema.
+    Vista para registrar un nuevo usuario 
     """
     permission_classes = [AllowAny]
     
@@ -34,9 +34,7 @@ class MateriaListView(generics.ListCreateAPIView):
 
 
 class AdminUserListView(generics.ListAPIView):
-    """
-    Vista para listar TODOS los usuarios (para que el Admin los vea).
-    """
+    
     queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
@@ -64,18 +62,13 @@ class AlumnosListView(generics.ListAPIView):
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Vista para obtener, actualizar o eliminar un usuario específico.
-    Soporta tanto PUT (actualización completa) como PATCH (actualización parcial).
-    """
+    
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
     
     def update(self, request, *args, **kwargs):
-        """
-        Sobrescribimos update para agregar logging y mejor manejo de errores.
-        """
+        
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         
@@ -88,8 +81,6 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def partial_update(self, request, *args, **kwargs):
-        """
-        Maneja las solicitudes PATCH para actualizaciones parciales.
-        """
+       
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)

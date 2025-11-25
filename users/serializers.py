@@ -50,10 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
     
     def update(self, instance, validated_data):
-        """
-        Actualiza un usuario existente.
-        Si se proporciona una contraseña, la encripta antes de guardar.
-        """
+        
         # Extraer campos especiales
         password = validated_data.pop('password', None)
         materias_data = validated_data.pop('materias', None)

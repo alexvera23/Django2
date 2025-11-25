@@ -1,7 +1,8 @@
 # users/serializers.py
 from rest_framework import serializers
-from .models import User, Materia
+from .models import User, Materia, Evento
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 # Serializador para el modelo Materia
 class MateriaSerializer(serializers.ModelSerializer):
@@ -84,3 +85,27 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['last_name'] = user.last_name
         
         return token
+    
+
+class EventoSerializer(serializers.ModelSerializer):
+    publico = serializers.DictField(child=serializers.BooleanField(), write_only=True)
+    class Meta:
+        model = Evento
+        fields = [
+            'id', 'nombre', 'tipo', 'fecha', 'hora_inicio', 'hora_fin',
+            'lugar', 'programa_educativo', 'responsable', 'descripcion', 'cupo',
+            'publico', # El campo que recibe el JSON
+            # Los campos reales (para cuando leamos datos)
+            'publico_estudiantes', 'publico_profesores', 'publico_general'
+        ]
+        read_only_fields = [ 'publico_estudiantes', 'publico_profesores', 'publico_general' ]
+
+    def create(self, validated_data):
+        publico_data = validated_data.pop('publico', {})
+        evento=Evento.objects.create(
+            publico_estudiantes=publico_data.get('estudiantes', False),
+            publico_profesores=publico_data.get('profesores', False),
+            publico_general=publico_data.get('general', False),
+            **validated_data
+        )
+        return evento

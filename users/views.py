@@ -2,8 +2,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
-from .serializers import UserSerializer, MateriaSerializer
-from .models import User, Materia 
+from .serializers import UserSerializer, MateriaSerializer, EventoSerializer
+from .models import Evento, User, Materia 
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 
@@ -84,3 +84,12 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
        
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
+    
+class EventoListView(generics.ListCreateAPIView):
+    """
+    Vista para listar todos los eventos o crear un nuevo evento.
+    """
+    queryset = Evento.objects.all()
+    serializer_class = EventoSerializer
+    permission_classes = [IsAuthenticated]
+    

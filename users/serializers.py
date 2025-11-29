@@ -94,15 +94,17 @@ class EventoSerializer(serializers.ModelSerializer):
         model = Evento
         fields = [
             'id', 'nombre', 'tipo', 'fecha', 'hora_inicio', 'hora_fin',
-            'lugar', 'programa_educativo', 'responsable', 'descripcion', 'cupo',
+            'lugar', 'programa_educativo', 'responsable','responsable_nombre', 'descripcion', 'cupo',
             'publico', # El campo que recibe el JSON
             # Los campos reales (para cuando leamos datos)
             'publico_estudiantes', 'publico_profesores', 'publico_general'
         ]
-        read_only_fields = [ 'publico_estudiantes', 'publico_profesores', 'publico_general' ]
+        read_only_fields = [ 'publico_estudiantes', 'publico_profesores', 'publico_general', 'responsable_nombre' ]
 
     def get_responsable_nombre(self, obj):
-        return f"{obj.responsable.first_name} {obj.responsable.last_name}"
+        if obj.responsable:
+            return f"{obj.responsable.first_name} {obj.responsable.last_name}"
+        return "Sin responsable"
 
     def create(self, validated_data):
         publico_data = validated_data.pop('publico', {})

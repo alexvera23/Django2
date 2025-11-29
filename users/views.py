@@ -92,4 +92,12 @@ class EventoListView(generics.ListCreateAPIView):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
     permission_classes = [IsAuthenticated]
+
+class EventoDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Vista para obtener, actualizar o eliminar un evento específico.
+    """
+    queryset = Evento.objects.all()
+    serializer_class = EventoSerializer
+    permission_classes = [IsAuthenticated]    
     

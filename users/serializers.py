@@ -89,6 +89,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class EventoSerializer(serializers.ModelSerializer):
     publico = serializers.DictField(child=serializers.BooleanField(), write_only=True)
+    responsable_nombre = serializers.SerializerMethodField()
     class Meta:
         model = Evento
         fields = [
@@ -99,6 +100,9 @@ class EventoSerializer(serializers.ModelSerializer):
             'publico_estudiantes', 'publico_profesores', 'publico_general'
         ]
         read_only_fields = [ 'publico_estudiantes', 'publico_profesores', 'publico_general' ]
+
+    def get_responsable_nombre(self, obj):
+        return f"{obj.responsable.first_name} {obj.responsable.last_name}"
 
     def create(self, validated_data):
         publico_data = validated_data.pop('publico', {})

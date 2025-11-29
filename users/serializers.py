@@ -60,7 +60,7 @@ class UserSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         
-        # Si hay una nueva contraseña, encriptarla
+        
         if password:
             instance.set_password(password)
         

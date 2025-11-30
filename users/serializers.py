@@ -115,3 +115,16 @@ class EventoSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return evento
+    
+    def update(self, instance, validated_data):
+        # 1. Extraemos el diccionario 'publico' si viene en la petición
+        publico_data = validated_data.pop('publico', None)
+
+        # 2. Si hay datos de público, actualizamos los campos booleanos manualmente
+        if publico_data is not None:
+            instance.publico_estudiantes = publico_data.get('estudiantes', instance.publico_estudiantes)
+            instance.publico_profesores = publico_data.get('profesores', instance.publico_profesores)
+            instance.publico_general = publico_data.get('publico_general', instance.publico_general) # <--- OJO AQUÍ
+
+        # 3. Actualizamos el resto de los campos usando la lógica por defecto
+        return super().update(instance, validated_data)

@@ -139,7 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200", # El origen de tu app de Angular
-    # "https://tu-app-angular.vercel.app"
+     "https://angular1-blond.vercel.app/"
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 

@@ -31,6 +31,7 @@ class MateriaListView(generics.ListCreateAPIView):
     queryset = Materia.objects.all()
     serializer_class = MateriaSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [] 
 
 
 class AdminUserListView(generics.ListAPIView):

@@ -141,7 +141,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200", # El origen de tu app de Angular
      "https://angular1-blond.vercel.app/"
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_ALL_ORIGINS = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

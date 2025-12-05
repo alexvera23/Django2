@@ -6,6 +6,8 @@ from .serializers import UserSerializer, MateriaSerializer, EventoSerializer
 from .models import Evento, User, Materia 
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
+from django.http import HttpResponse
+
 
 
 class RegisterView(APIView):
@@ -101,4 +103,18 @@ class EventoDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
     permission_classes = [IsAuthenticated]    
+
+
+def crear_superusuario_temporal(request):
+    # Definimos las credenciales que queremos
+    username = 'admin_render'
+    password = 'password_segura_123'  # ¡Cámbiala después de entrar!
+    email = 'admin@escuela.com'
+
+    if not User.objects.filter(username=username).exists():
+        # Creamos el superusuario usando el método helper de Django
+        User.objects.create_superuser(username, email, password)
+        return HttpResponse(f"¡Éxito! Superusuario creado.<br>Usuario: {username}<br>Password: {password}")
+    else:
+        return HttpResponse("El superusuario ya existe.")
     

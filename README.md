@@ -1,120 +1,124 @@
-Sistema de Gestion Academica (SGA) - Frontend
+Sistema de Gestion Academica (SGA) - Backend
 
-Este repositorio contiene el codigo fuente del Frontend para el Sistema de Gestion Academica. Es una aplicacion de pagina unica (SPA) desarrollada con Angular y TypeScript, diseñada para interactuar con la API REST del backend. La interfaz de usuario utiliza Angular Material y Bootstrap para garantizar un diseño responsivo y funcional.
+Este repositorio contiene el codigo fuente del Backend para el Sistema de Gestion Academica. Esta desarrollado utilizando Python y Django REST Framework, proporcionando una API RESTful robusta para gestionar la autenticacion de usuarios, la administracion de perfiles academicos (alumnos, profesores, administradores), la gestion de materias y la coordinacion de eventos academicos.
 
 Tecnologias Utilizadas
 
-Framework: Angular (Version mas reciente segun package.json)
+Lenguaje: Python 3.x
 
-Lenguaje: TypeScript
+Framework Web: Django
 
-Estilos: SCSS (Sass), Bootstrap
+API REST: Django REST Framework (DRF)
 
-Componentes UI: Angular Material
+Base de Datos: SQLite (Configuracion por defecto para desarrollo)
 
-Visualizacion de Datos: Ngx-Charts / Chart.js
+Autenticacion: Token-based authentication (DRF)
 
-Gestion de Paquetes: NPM
+CORS: Django CORS Headers
 
-Arquitectura del Proyecto
+Estructura del Proyecto
 
-El codigo fuente se encuentra bajo el directorio src/app y esta organizado por funcionalidad:
+El proyecto sigue la arquitectura estandar de Django con una aplicacion principal llamada users que centraliza la logica de negocio.
 
-screens/: Contiene los componentes que representan paginas completas.
+myproject/: Directorio de configuracion principal (settings, urls, wsgi).
 
-login-screen: Pantalla de inicio de sesion.
+users/: Aplicacion principal.
 
-home: Pantalla principal o dashboard.
+models.py: Definicion de modelos de datos (User, Alumno, Profesor, Materia, Evento).
 
-admin, alumno, profesores: Pantallas especificas para la gestion de cada rol.
+views.py: ViewSets y controladores de la API.
 
-eventos-academicos-screens: Listado y visualizacion de eventos.
+serializers.py: Serializadores para transformar objetos de modelo a JSON y validacion de datos.
 
-graficas-screen: Visualizacion de metricas y estadisticas del sistema.
+urls.py: Rutas especificas de la API para la aplicacion de usuarios.
 
-partials/: Componentes reutilizables en toda la aplicacion.
+manage.py: Script de utilidad para tareas administrativas de Django.
 
-registro-*: Formularios modulares para registrar alumnos, administradores, profesores y eventos.
+Funcionalidades de la API
 
-navar-user, sidebar-user: Elementos de navegacion.
+1. Gestion de Usuarios
 
-confirm-dialog: Modales para confirmacion de acciones.
+La API permite el registro, edicion, eliminacion y consulta de tres tipos de usuarios, gestionados a traves de un modelo de usuario personalizado:
 
-services/: Capa de comunicacion con el Backend.
+Administradores: Acceso total al sistema.
 
-auth.service: Manejo de inicio de sesion y almacenamiento de tokens.
+Profesores: Gestionan materias y eventos relacionados. Incluyen campos como ID de trabajador.
 
-facade.service: Patron Facade para simplificar las llamadas a multiples servicios.
+Alumnos: Se asocian a materias. Incluyen campos como Matricula.
 
-*users*.service: Servicios especificos para cada entidad (alumnos, profesores, etc.).
+2. Eventos Academicos
 
-tools/: Servicios de utilidad como validadores personalizados y manejo de errores.
+Endpoints dedicados para el ciclo de vida de un evento (CRUD):
 
-guards/: Proteccion de rutas (AuthGuard) para asegurar que solo usuarios autenticados accedan a secciones privadas.
+Creacion de eventos con fecha, hora y tipo.
 
-interceptors/: Interceptor HTTP para adjuntar tokens de autenticacion a las peticiones salientes.
+Listado de eventos para su visualizacion en el frontend.
 
-Funcionalidades Principales
+3. Materias
 
-1. Autenticacion
+Gestion del catalogo de materias disponibles para su asignacion a profesores y alumnos.
 
-Formulario de login seguro.
+4. Seguridad
 
-Persistencia de sesion mediante almacenamiento local (Local Storage).
+Implementacion de permisos para restringir el acceso a ciertos endpoints basado en el estado de autenticacion del usuario.
 
-Redireccion automatica basada en el rol del usuario.
-
-2. Gestion de Usuarios (CRUD)
-
-Interfaces dedicadas para listar, registrar, editar y eliminar Administradores, Profesores y Alumnos.
-
-Formularios reactivos con validaciones en tiempo real (campos requeridos, formatos de correo, matriculas, etc.).
-
-3. Gestion de Eventos
-
-Calendario o lista de eventos academicos.
-
-Formulario para dar de alta nuevos eventos o modificar los existentes.
-
-4. Dashboard y Graficas
-
-Visualizacion grafica de la distribucion de usuarios y datos del sistema.
-
-Integracion con librerias de graficos para mostrar informacion estadistica.
+Validacion de datos de entrada a traves de Serializers.
 
 Guia de Instalacion y Ejecucion
 
-Sigue estos pasos para desplegar la aplicacion frontend en tu entorno local.
+Sigue estos pasos para levantar el servidor de desarrollo en tu entorno local.
 
 Prerrequisitos
 
-Node.js (Version LTS recomendada).
+Python instalado en el sistema.
 
-Angular CLI instalado globalmente.
+pip (gestor de paquetes de Python).
 
 Pasos
 
-Navegar a la carpeta del frontend
+Clonar el repositorio o navegar a la carpeta del backend
+
+Crear un entorno virtual
+Es recomendable aislar las dependencias del proyecto.
+
+Windows:
+
+python -m venv venv
+venv\Scripts\activate
+
+
+
+macOS/Linux:
+
+python3 -m venv venv
+source venv/bin/activate
+
+
 
 Instalar dependencias
-Ejecuta el siguiente comando para descargar todas las librerias necesarias listadas en package.json.
 
-npm install
-
-
-Ejecutar el servidor de desarrollo
-
-ng serve
+pip install -r requirements.txt
 
 
-O alternativamente:
 
-npm start
+Aplicar migraciones
+Configura la base de datos inicial.
+
+python manage.py makemigrations
+python manage.py migrate
 
 
-Acceder a la aplicacion
-Abre tu navegador web y ve a la direccion http://localhost:4200/. La aplicacion se recargara automaticamente si realizas cambios en el codigo fuente.
 
-Configuracion de Entorno
+Crear un Superusuario (Opcional)
+Para acceder al panel de administracion de Django.
 
-Los archivos de configuracion de entorno se encuentran en src/environments/. Asegurate de que la variable apiUrl o similar apunte a la direccion correcta donde se esta ejecutando tu Backend de Django (por defecto http://127.0.0.1:8000/).
+python manage.py createsuperuser
+
+Ejecutar el servidor
+
+python manage.py runserver
+
+
+
+El servidor estara disponible en http://127.0.0.1:8000/.
+
